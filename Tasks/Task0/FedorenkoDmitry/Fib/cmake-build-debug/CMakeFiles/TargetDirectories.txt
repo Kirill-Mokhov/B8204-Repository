@@ -1,3 +1,0 @@
-/home/dima/CLionProjects/Fib/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/dima/CLionProjects/Fib/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/dima/CLionProjects/Fib/cmake-build-debug/CMakeFiles/Fib.dir
