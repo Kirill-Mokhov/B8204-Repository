@@ -5,31 +5,38 @@ using namespace std;
 
 //####################SORT####################
 class SorterInterface{
+protected:
+    bool increasing;
 public:
+    SorterInterface(bool _increasing){
+        increasing = _increasing;
+    }
     virtual void sort(int* v, unsigned int size) = 0;
 };
 
 class BubbleSort: public SorterInterface{
 public:
+    BubbleSort(bool increasing): SorterInterface(increasing){};
     void sort(int* v, unsigned int size){
         for(int i = 0; i < size; i++)
             for(int j = 0; j < i; j++)
-                if(v[i] < v[j]) swap(v[i], v[j]);
+                if(increasing ? v[i] < v[j] : v[i] > v[j]) swap(v[i], v[j]);
     }
 };
 
 class ShakerSort: public SorterInterface{
 public:
+    ShakerSort(bool increasing): SorterInterface(increasing){};
     void sort(int* v, unsigned int size){
         int leftMark = 1;
         int rightMark = size - 1;
         while (leftMark <= rightMark){
             for (int i = rightMark; i >= leftMark; i--)
-                if (v[i-1] > v[i]) swap(v[i-1], v[i]);
+                if (increasing ? v[i-1] > v[i] : v[i-1] < v[i]) swap(v[i-1], v[i]);
             leftMark++;
 
             for (int i = leftMark; i <= rightMark; i++)
-                if (v[i-1] > v[i]) swap(v[i-1], v[i]);
+                if (increasing ? v[i-1] > v[i] : v[i-1] < v[i]) swap(v[i-1], v[i]);
             rightMark--;
         }
     }
@@ -136,8 +143,8 @@ int main(){
 
     FillerRandom fillerR(1, 100);
     Printer printer(", ");
-    BubbleSort bubble;
-    ShakerSort shaker;
+    BubbleSort bubble(true);
+    ShakerSort shaker(false);
     Runner runner;
 
     runner.run(fillerR, printer, bubble, a, size);
