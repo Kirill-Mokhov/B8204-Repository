@@ -3,40 +3,73 @@
 
 using namespace std;
 
+//####################COMPARE####################
+class ComparatorInterface{
+public:
+    virtual char compare(int leftOperand, int rightOperand) = 0;
+};
+
+class ComparatorLess: public ComparatorInterface{
+public:
+    char compare(int leftOperand, int rightOperand){
+        if(leftOperand < rightOperand) return 1;
+        if(leftOperand > rightOperand) return -1;
+        if(leftOperand == rightOperand) return 0;
+    }
+};
+
+class ComparatorBigger: public ComparatorInterface{
+public:
+    char compare(int leftOperand, int rightOperand){
+        if(leftOperand > rightOperand) return 1;
+        if(leftOperand < rightOperand) return -1;
+        if(leftOperand == rightOperand) return 0;
+    }
+};
+
+class ComparatorDivisibilityBy2: public ComparatorInterface{
+public:
+    char compare(int leftOperand, int rightOperand){
+        if(leftOperand % 2 == 0 && rightOperand % 2 != 0) return 1;
+        if(leftOperand % 2 != 0 && rightOperand % 2 == 0) return -1;
+        if(leftOperand % 2 == 0 && rightOperand % 2 == 0) return 0;
+    }
+};
+
 //####################SORT####################
 class SorterInterface{
 protected:
-    bool increasing;
+    ComparatorInterface* comparator;
 public:
-    SorterInterface(bool _increasing){
-        increasing = _increasing;
+    SorterInterface(ComparatorInterface& _comparator){
+        comparator = &_comparator;
     }
     virtual void sort(int* v, unsigned int size) = 0;
 };
 
 class BubbleSort: public SorterInterface{
 public:
-    BubbleSort(bool increasing): SorterInterface(increasing){};
+    BubbleSort(ComparatorInterface& _comparator): SorterInterface(_comparator){};
     void sort(int* v, unsigned int size){
         for(int i = 0; i < size; i++)
             for(int j = 0; j < i; j++)
-                if(increasing ? v[i] < v[j] : v[i] > v[j]) swap(v[i], v[j]);
+                if(comparator->compare(v[i], v[j]) == 1) swap(v[i], v[j]);
     }
 };
 
 class ShakerSort: public SorterInterface{
 public:
-    ShakerSort(bool increasing): SorterInterface(increasing){};
+    ShakerSort(ComparatorInterface& _comparator): SorterInterface(_comparator){};
     void sort(int* v, unsigned int size){
         int leftMark = 1;
         int rightMark = size - 1;
         while (leftMark <= rightMark){
             for (int i = rightMark; i >= leftMark; i--)
-                if (increasing ? v[i-1] > v[i] : v[i-1] < v[i]) swap(v[i-1], v[i]);
+                if (comparator->compare(v[i], v[i-1]) == 1) swap(v[i-1], v[i]);
             leftMark++;
 
             for (int i = leftMark; i <= rightMark; i++)
-                if (increasing ? v[i-1] > v[i] : v[i-1] < v[i]) swap(v[i-1], v[i]);
+                if (comparator->compare(v[i], v[i-1]) == 1) swap(v[i-1], v[i]);
             rightMark--;
         }
     }
@@ -143,8 +176,11 @@ int main(){
 
     FillerRandom fillerR(1, 100);
     Printer printer(", ");
-    BubbleSort bubble(true);
-    ShakerSort shaker(false);
+    ComparatorLess less;
+    ComparatorBigger bigger;
+    ComparatorDivisibilityBy2 divisibilityBy2;
+    BubbleSort bubble(less);
+    ShakerSort shaker(divisibilityBy2);
     Runner runner;
 
     runner.run(fillerR, printer, bubble, a, size);
