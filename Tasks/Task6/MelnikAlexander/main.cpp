@@ -190,14 +190,14 @@ int main() {
     Runner runner;
 
     runner.run(bubbleSorter, randomFiller, consolePrinter, arr, size);
-    
 
-    ComparatorGreater ComparatorGreater;
-    BubbleSorter bubbleSorterGreater(&ComparatorGreater);
+
+    ComparatorGreater comparatorGreater;
+    BubbleSorter bubbleSorterGreater(&comparatorGreater);
     runner.run(bubbleSorterGreater, randomFiller, consolePrinter, arr, size);
 
 
-    HeapSorter heapSorter(&ComparatorGreater);
+    HeapSorter heapSorter(&comparatorGreater);
     runner.run(heapSorter, randomFiller, consolePrinter, arr, size);
 
 
