@@ -11,7 +11,7 @@ public:
 
 class ComparatorLess: public ComparatorInterface{
 public:
-    char compare(int leftOperand, int rightOperand){
+    char compare(int leftOperand, int rightOperand) override {
         if(leftOperand < rightOperand) return 1;
         if(leftOperand > rightOperand) return -1;
         if(leftOperand == rightOperand) return 0;
@@ -20,7 +20,7 @@ public:
 
 class ComparatorBigger: public ComparatorInterface{
 public:
-    char compare(int leftOperand, int rightOperand){
+    char compare(int leftOperand, int rightOperand) override {
         if(leftOperand > rightOperand) return 1;
         if(leftOperand < rightOperand) return -1;
         if(leftOperand == rightOperand) return 0;
@@ -29,7 +29,7 @@ public:
 
 class ComparatorDivisibilityBy2: public ComparatorInterface{
 public:
-    char compare(int leftOperand, int rightOperand){
+    char compare(int leftOperand, int rightOperand) override {
         if(leftOperand % 2 == 0 && rightOperand % 2 != 0) return 1;
         if(leftOperand % 2 != 0 && rightOperand % 2 == 0) return -1;
         if(leftOperand % 2 == 0 && rightOperand % 2 == 0) return 0;
@@ -38,29 +38,34 @@ public:
 
 //####################SORT####################
 class SorterInterface{
-protected:
-    ComparatorInterface* comparator;
 public:
-    SorterInterface(ComparatorInterface& _comparator){
-        comparator = &_comparator;
-    }
     virtual void sort(int* v, unsigned int size) = 0;
 };
 
-class BubbleSort: public SorterInterface{
+class Sorter: public SorterInterface{
+protected:
+    ComparatorInterface* comparator;
+
 public:
-    BubbleSort(ComparatorInterface& _comparator): SorterInterface(_comparator){};
-    void sort(int* v, unsigned int size){
+    Sorter(ComparatorInterface& _comparator){
+        comparator = &_comparator;
+    }
+};
+
+class BubbleSort: public Sorter{
+public:
+    BubbleSort(ComparatorInterface& _comparator): Sorter(_comparator){};
+    void sort(int* v, unsigned int size) override {
         for(int i = 0; i < size; i++)
             for(int j = 0; j < i; j++)
                 if(comparator->compare(v[i], v[j]) == 1) swap(v[i], v[j]);
     }
 };
 
-class ShakerSort: public SorterInterface{
+class ShakerSort: public Sorter{
 public:
-    ShakerSort(ComparatorInterface& _comparator): SorterInterface(_comparator){};
-    void sort(int* v, unsigned int size){
+    ShakerSort(ComparatorInterface& _comparator): Sorter(_comparator){};
+    void sort(int* v, unsigned int size) override {
         int leftMark = 1;
         int rightMark = size - 1;
         while (leftMark <= rightMark){
@@ -78,7 +83,7 @@ public:
 //####################FILL####################
 class FillerInterface{
 protected:
-    int* resource;
+    int* resource{};
 public:
     virtual void inputResource(unsigned int size) = 0;
     virtual void fill(int* v, unsigned int size) = 0;
@@ -90,13 +95,13 @@ public:
 
 class FillerManual: public FillerInterface{
 public:
-    void inputResource(unsigned int size){
+    void inputResource(unsigned int size) override {
         resource = new int[size];
         for(unsigned int i = 0; i < size; i++)
             cin >> resource[i];
     }
 
-    void fill(int* v, unsigned int size){
+    void fill(int* v, unsigned int size) override {
         for(unsigned int i = 0; i < size; i++)
             v[i] = resource[i];
     }
@@ -107,7 +112,7 @@ private:
     int left, right;
 
 public:
-    void inputResource(unsigned int size){
+    void inputResource(unsigned int size) override {
         resource = new int[size];
         for(unsigned int i = 0; i < size; i++){
             resource[i] = rand() % right + left;
@@ -116,17 +121,17 @@ public:
 
     FillerRandom(int l, int r){
         try{
-            if(l > r) throw "Error! In FillerRandom: Invalid interval for randomize";
+            if(l > r) throw invalid_argument("Illegal range for random");
             left = l;
             right = r;
-        } catch(const char* err){
-            cout << err << endl;
+        } catch(exception& e){
+            cout << e.what() << endl;
             left = 0;
             right = 1;
         }
     }
 
-    void fill(int* v, unsigned int size){
+    void fill(int* v, unsigned int size) override {
         this->inputResource(size);
         for(unsigned int i = 0; i < size; i++)
             v[i] = resource[i];
@@ -148,7 +153,7 @@ public:
         delimiter = symbol;
     }
 
-    void print(int* v, unsigned int size){
+    void print(int* v, unsigned int size) override {
         for(int i = 0; i < size - 1; i++)
             cout << v[i] << delimiter;
         cout << v[size-1] << endl;
