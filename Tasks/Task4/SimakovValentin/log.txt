@@ -1,0 +1,6 @@
+INFO: [1526134529] Code: 0 Message: a = 24
+INFO: [1526134529] Code: 0 Message: a = 6
+INFO: [1526134529] Code: 0 Message: a = 2
+INFO: [1526134529] Code: 0 Message: a = 1
+INFO: [1526134529] Code: 0 Message: a = 1
+ERROR: [1526134529] Code: -1 Message: DivideByZeroException

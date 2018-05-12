@@ -6,34 +6,25 @@
 
 class FileLogger: public LoggerInterface{
 protected:
-    std::ofstream fout;
+    std::ofstream out;
+
+    void sample_log_message(std::string message_type, int code = 0, std::string message = "") {
+        out << message_type << ": [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
+    }
+
 public:
-    FileLogger(){
-        fout.open("log.txt");
-    }
+    FileLogger() {out.open("../log.txt");}
 
-    ~FileLogger(){
-        fout.close();
-    }
+    ~FileLogger() {out.close();}
 
-    void info(int code = 0, std::string message = "") override {
-        fout << "INFO: [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
-    }
+    void info(int code = 0, std::string message = "") override {sample_log_message("INFO", code, message);}
 
-    void error(int code = 0, std::string message = "") override {
-        fout << "ERROR: [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
-    }
+    void error(int code = 0, std::string message = "") override {sample_log_message("ERROR", code, message);}
 
-    void debug(int code = 0, std::string message = "") override {
-        fout << "DEBUG: [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
-    }
+    void debug(int code = 0, std::string message = "") override {sample_log_message("DEBUG", code, message);}
 
-    void warning(int code = 0, std::string message = "") override {
-        fout << "WARNING: [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
-    }
+    void warning(int code = 0, std::string message = "") override {sample_log_message("WARNING", code, message);}
 
-    void notice(int code = 0, std::string message = "") override {
-        fout << "NOTICE: [" << time(NULL) << "] Code: " << code << " Message: " << message << std::endl;
-    }
+    void notice(int code = 0, std::string message = "") override {sample_log_message("NOTICE", code, message);}
 };
 #endif
