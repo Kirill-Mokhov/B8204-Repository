@@ -10,8 +10,10 @@ using std::stack;
 using std::pair;
 using std::string;
 
-std::set<char> digits = {'0','1','2','3','4','5','6','7','8','9'};
-std::set<char> operations = {'+','-','*','(',')'};
+
+std::set<char> digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+std::set<char> operations = {'+', '-', '*', '(', ')'};
+
 
 const int zero_code = 48;
 
@@ -64,6 +66,8 @@ protected:
 public:
     string convert(string infixNotationExpression){
         string postfixNotationExpression;
+        bool openBracket = false;
+
         for (char i : infixNotationExpression) {
             if(digits.find(i) != digits.end())
                 postfixNotationExpression += i;
@@ -77,8 +81,13 @@ public:
                     case ')': token = pair<char,int>(i, 3); break;
                     default:break;
                 }
-                if(i == '(') expressionStack.push(token);
+                if(i == '('){
+                    openBracket = true;
+                    expressionStack.push(token);
+                }
                 else if(i == ')'){
+                    if(!openBracket) throw std::logic_error("Wrong expression");
+                    openBracket = false;
                     while (expressionStack.top().first != '(') {
                         postfixNotationExpression += expressionStack.top().first;
                         expressionStack.pop();
@@ -95,6 +104,7 @@ public:
                 }
             }
         }
+        if(openBracket) throw std::logic_error("Wrong expression");
         while(!expressionStack.empty()){
             postfixNotationExpression += expressionStack.top().first;
             expressionStack.pop();
