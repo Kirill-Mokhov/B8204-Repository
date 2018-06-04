@@ -26,32 +26,45 @@ public:
     PostfixNotationExpression(string str) : expression(str) {}
     ~PostfixNotationExpression() {}
 
+    string view() {
+        return expression;
+    }
+
     int value() {
         int leftOperand(0), rightOperand(0);
+        bool readNum(false);
+        string number;
+
         for (char i : expression) {
-            if(digits.find(i) != digits.end())
-                expressionStack.push(i - zero_code);
+            if(digits.find(i) != digits.end()) {
+                readNum = true;
+                number += i;
+                //expressionStack.push(i - zero_code);
+            }
 
-            else if(operations.find(i) != operations.end()) {
-                rightOperand = expressionStack.top();
-                expressionStack.pop();
-                leftOperand = expressionStack.top();
-                expressionStack.pop();
+            else {
+                if(readNum){
+                    readNum = false;
+                    expressionStack.push(atoi(number.data()));
+                    number = "";
+                }
 
-                switch(i) {
-                    case '+':
-                        expressionStack.push(leftOperand+rightOperand);
-                        break;
-                    case '-':
-                        expressionStack.push(leftOperand-rightOperand);
-                        break;
-                    case '*':
-                        expressionStack.push(leftOperand*rightOperand);
-                        break;
-                    default:break;
+                if(operations.find(i) != operations.end()) {
+                    rightOperand = expressionStack.top();
+                    expressionStack.pop();
+                    leftOperand = expressionStack.top();
+                    expressionStack.pop();
+
+                    switch(i) {
+                        case '+': expressionStack.push(leftOperand+rightOperand);break;
+                        case '-': expressionStack.push(leftOperand-rightOperand);break;
+                        case '*': expressionStack.push(leftOperand*rightOperand);break;
+                        default:break;
+                    }
                 }
             }
         }
+        if(readNum) expressionStack.push(atoi(number.data()));;
         int result = expressionStack.top();
         expressionStack.pop();
         if(!expressionStack.empty()) throw std::logic_error("Wrong expression");
@@ -67,43 +80,54 @@ public:
     string convert(string infixNotationExpression){
         string postfixNotationExpression;
         bool openBracket = false;
+        bool readNum(false);
+        string number;
 
         for (char i : infixNotationExpression) {
-            if(digits.find(i) != digits.end())
-                postfixNotationExpression += i;
-
-            else if(operations.find(i) != operations.end()) {
-                pair<char, int> token;
-                switch(i) {
-                    case '(': token = pair<char,int>(i, 0); break;
-                    case '+': case '-': token = pair<char,int>(i, 1); break;
-                    case '*': token = pair<char,int>(i, 2); break;
-                    case ')': token = pair<char,int>(i, 3); break;
-                    default:break;
+            if(digits.find(i) != digits.end()){
+                readNum = true;
+                number += i;
+            }
+            else {
+                if(readNum){
+                    readNum = false;
+                    postfixNotationExpression += (number+' ');
+                    number = "";
                 }
-                if(i == '('){
-                    openBracket = true;
-                    expressionStack.push(token);
-                }
-                else if(i == ')'){
-                    if(!openBracket) throw std::logic_error("Wrong expression");
-                    openBracket = false;
-                    while (expressionStack.top().first != '(') {
-                        postfixNotationExpression += expressionStack.top().first;
+                if(operations.find(i) != operations.end()) {
+                    pair<char, int> token;
+                    switch(i) {
+                        case '(': token = pair<char,int>(i, 0); break;
+                        case '+': case '-': token = pair<char,int>(i, 1); break;
+                        case '*': token = pair<char,int>(i, 2); break;
+                        case ')': token = pair<char,int>(i, 3); break;
+                        default:break;
+                    }
+                    if(i == '('){
+                        openBracket = true;
+                        expressionStack.push(token);
+                    }
+                    else if(i == ')'){
+                        if(!openBracket) throw std::logic_error("Wrong expression");
+                        openBracket = false;
+                        while (expressionStack.top().first != '(') {
+                            postfixNotationExpression += expressionStack.top().first;
+                            expressionStack.pop();
+                        }
+                        if(expressionStack.empty()) throw std::logic_error("Wrong expression");
                         expressionStack.pop();
                     }
-                    if(expressionStack.empty()) throw std::logic_error("Wrong expression");
-                    expressionStack.pop();
-                }
-                else {
-                    while (!expressionStack.empty() && expressionStack.top().second >= token.second) {
-                        postfixNotationExpression += expressionStack.top().first;
-                        expressionStack.pop();
+                    else {
+                        while (!expressionStack.empty() && expressionStack.top().second >= token.second) {
+                            postfixNotationExpression += expressionStack.top().first;
+                            expressionStack.pop();
+                        }
+                        expressionStack.push(token);
                     }
-                    expressionStack.push(token);
                 }
             }
         }
+        if(readNum) postfixNotationExpression += (number+' ');
         if(openBracket) throw std::logic_error("Wrong expression");
         while(!expressionStack.empty()){
             postfixNotationExpression += expressionStack.top().first;

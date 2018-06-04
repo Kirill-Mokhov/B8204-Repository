@@ -1,6 +1,4 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
-int main() {
-    return RUN_ALL_TESTS();
-}
+int main() {return RUN_ALL_TESTS();}

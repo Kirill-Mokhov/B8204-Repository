@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <iostream>
 #include "../PostfixNotation.h"
 
 class PostfixNotationTest : public testing::Test {
@@ -61,3 +60,11 @@ TEST_F(PostfixNotationTest, ThrowNoLeftBrackets){
     EXPECT_THROW(postfixConverter.convert("5-2*2-2)*2-3"), std::logic_error);
 }
 
+TEST_F(PostfixNotationTest, EmptyBrackets){
+    EXPECT_NO_THROW(postfixConverter.convert("()"));
+}
+
+TEST_F(PostfixNotationTest, SeveralDigits){
+    postfixExpression = new PostfixNotationExpression(postfixConverter.convert("222+333*123"));
+    EXPECT_EQ(41181, postfixExpression->value());
+}
