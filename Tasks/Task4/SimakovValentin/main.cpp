@@ -7,6 +7,6 @@ using namespace std;
 
 int main() {
     ConsoleLogger cl;
-    cl.info(0, "a = " + std::to_string(1));
+    cl.info(0, "a = ");
     return RUN_ALL_TESTS();
 }
