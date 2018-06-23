@@ -12,14 +12,6 @@ public:
     }
 };
 
-class FileLoggerTest : public testing::Test {
-public:
-    FileLogger fl;
-    FileLoggerTest(){
-        fl;
-    }
-};
-
 TEST_F(ConsoleLoggerTest, info_test){
     int a = 120;
     for (int i = 5; i > 0; i--) {

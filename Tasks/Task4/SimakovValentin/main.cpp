@@ -6,7 +6,6 @@
 using namespace std;
 
 int main() {
-    ConsoleLogger cl;
-    cl.info(0, "a = ");
+    FileLogger l;
     return RUN_ALL_TESTS();
 }
