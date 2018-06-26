@@ -1,0 +1,7 @@
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\obj\Debug\OPZ.csprojResolveAssemblyReference.cache
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\obj\Debug\OPZ.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\bin\Debug\OPZ.exe.config
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\bin\Debug\OPZ.exe
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\bin\Debug\OPZ.pdb
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\obj\Debug\OPZ.exe
+C:\Users\User\Documents\RAZROOP\OPZ\OPZ\obj\Debug\OPZ.pdb
